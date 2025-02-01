@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Encryptor - Secure Your PDF Files</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Dark/Light Mode Toggle -->
+    <div class="mode-toggle" id="mode-toggle">
+        <i class="fas fa-moon"></i>
+    </div>
+
+    <!-- Top-right menu -->
+    <div class="menu-icon" id="menu-icon">
+        <i class="fas fa-bars"></i>
+    </div>
+    <div class="menu-dropdown" id="menu-dropdown">
+        <a href="mailto:minanadyfarag@gmail.com"><i class="fas fa-envelope"></i> Send Feedback</a>
+        <a href="https://minanadyfarag.github.io/my-portfolio" target="_blank"><i class="fas fa-user"></i> Contact the Developer</a>
+        <a href="https://github.com/minanadyfarag/pdf-encryptor/issues" target="_blank"><i class="fas fa-bug"></i> Found Issue</a>
+    </div>
+
+    <div class="container">
+        <header>
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="PDF Encryptor Logo" class="logo">
+            <h1>PDF Encryptor</h1>
+            <p class="animated-text">Protect your PDF files with a password. Fast, secure, and easy to use.</p>
+        </header>
+        <main>
+            <!-- Drag-and-Drop Area -->
+            <div class="drag-drop-area" id="drag-drop-area">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Drag & Drop your PDF file here</p>
+                <span>or</span>
+                <button id="browse-button">Browse</button>
+            </div>
+
+            <form id="encrypt-form" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file"><i class="fas fa-file-upload"></i> Upload PDF:</label>
+                    <input type="file" name="file" id="file" accept=".pdf" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Set Password:</label>
+                    <input type="password" name="password" id="password" placeholder="Enter a password" required>
+                </div>
+                <button type="submit" id="encrypt-button">
+                    <i class="fas fa-shield-alt"></i> Encrypt and Download
+                </button>
+            </form>
+            <div id="loading-spinner" class="loading-spinner" style="display: none;">
+                <div class="spinner"></div>
+                <p>Encrypting your PDF...</p>
+            </div>
+            <div id="success-message" class="success-message" style="display: none;">
+                <p><i class="fas fa-check-circle"></i> PDF encrypted successfully! Check your downloads.</p>
+            </div>
+        </main>
+        <footer>
+            <p>&copy; 2023 PDF Encryptor. Developed by <a href="https://minanadyfarag.github.io/my-portfolio" target="_blank">Mina Nady</a>.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Dark/Light Mode Toggle
+        const modeToggle = document.getElementById('mode-toggle');
+        const body = document.body;
+
+        modeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            modeToggle.querySelector('i').classList.toggle('fa-sun');
+            modeToggle.querySelector('i').classList.toggle('fa-moon');
+        });
+
+        // Drag-and-Drop Functionality
+        const dragDropArea = document.getElementById('drag-drop-area');
+        const fileInput = document.getElementById('file');
+
+        dragDropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dragDropArea.classList.add('dragover');
+        });
+
+        dragDropArea.addEventListener('dragleave', () => {
+            dragDropArea.classList.remove('dragover');
+        });
+
+        dragDropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dragDropArea.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+        });
+
+        document.getElementById('browse-button').addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Show loading spinner and success message
+        document.getElementById('encrypt-form').addEventListener('submit', function () {
+            document.getElementById('loading-spinner').style.display = 'block';
+            document.getElementById('encrypt-button').style.display = 'none';
+
+            setTimeout(function () {
+                document.getElementById('loading-spinner').style.display = 'none';
+                document.getElementById('success-message').style.display = 'block';
+            }, 3000);
+        });
+
+        // Toggle menu dropdown
+        document.getElementById('menu-icon').addEventListener('click', function () {
+            const dropdown = document.getElementById('menu-dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function (event) {
+            const dropdown = document.getElementById('menu-dropdown');
+            const menuIcon = document.getElementById('menu-icon');
+            if (event.target !== menuIcon && !menuIcon.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
